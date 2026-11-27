@@ -1,0 +1,101 @@
+name: Build APK
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install SDK packages
+        run: |
+          SDKMANAGER=$(command -v sdkmanager || find "$ANDROID_HOME/cmdline-tools" -name sdkmanager | head -n 1)
+          if [ -z "$SDKMANAGER" ]; then
+            echo "sdkmanager not found" >&2
+            exit 1
+          fi
+          yes | "$SDKMANAGER" --licenses > /dev/null || true
+          "$SDKMANAGER" --channel=3 --install "platforms;android-37.0"
+          "$SDKMANAGER" --install "build-tools;36.0.0" || \
+            "$SDKMANAGER" --channel=3 --install "build-tools;36.0.0"
+
+      - name: Build release APK
+        run: ./gradlew :app:assembleRelease --no-daemon
+
+      - name: Package APK
+        id: package
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          set -e
+          VERSION=$(sed -n 's/^project.app.versionName="\(.*\)"$/\1/p' gradle.properties)
+          BUILD_TOOLS="$ANDROID_HOME/build-tools/36.0.0"
+          UNSIGNED="app/build/outputs/apk/release/app-release-unsigned.apk"
+          mkdir -p out
+
+          KS="$RUNNER_TEMP/signing.jks"
+          if [ -n "$KEYSTORE_BASE64" ] && [ -n "$KEYSTORE_PASSWORD" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$KS"
+            KS_PASS="$KEYSTORE_PASSWORD"
+            echo "使用仓库 Secrets 中的签名密钥"
+          else
+            # 未配置完整签名密钥时使用 Android 默认调试签名（CN=Android Debug）
+            keytool -genkeypair -v -keystore "$KS" \
+              -storepass android -keypass android \
+              -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 \
+              -dname "CN=Android Debug,O=Android,C=US" > /dev/null 2>&1
+            KS_PASS="android"
+            echo "使用 Android 默认调试签名"
+          fi
+
+          "$BUILD_TOOLS/zipalign" -f -p 4 "$UNSIGNED" out/aligned.apk
+          "$BUILD_TOOLS/apksigner" sign \
+            --ks "$KS" \
+            --ks-pass "pass:$KS_PASS" \
+            --key-pass "pass:$KS_PASS" \
+            --v1-signing-enabled true \
+            --v2-signing-enabled true \
+            --out "out/nocos-$VERSION.apk" out/aligned.apk
+          "$BUILD_TOOLS/apksigner" verify --print-certs "out/nocos-$VERSION.apk" | head -4
+          echo "path=out/nocos-$VERSION.apk" >> "$GITHUB_OUTPUT"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nocos-apk
+          path: ${{ steps.package.outputs.path }}
+          if-no-files-found: error
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.package.outputs.path }}
+          body: |
+            ColorOS 17 模块合集，包含 7 个二级页面：
+
+            - 截屏：三指区域截屏松手后直接进入框选
+            - 桌面：二级菜单平铺；隐藏最近任务底部的「清理」按键
+            - 主题商店：解锁 VIP
+            - 游戏助手：屏蔽风驰启动动画；游戏云控伪装
+            - 小布输入法：解锁更多应用的键盘材质；键盘莫奈配色
+            - 权限管理：旧版启动弹窗、始终允许、解除受限设置、跳过恶意拦截、国际版权限页
+            - 应用分身：解除分身应用限制；上限提高到 10 个
+
+            所有开关默认关闭。安装后在 LSPosed 中启用模块并勾选对应作用域，修改后重新打开目标应用生效；权限管理和应用分身涉及 system_server，需要重启手机。

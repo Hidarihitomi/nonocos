@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
+    <queries>
+        <package android:name="com.oplus.keyboard" />
+        <package android:name="com.oplus.securitypermission" />
+        <package android:name="com.oplus.multiapp" />
+        <package android:name="com.oplus.screenshot" />
+        <package android:name="com.heytap.themestore" />
+        <package android:name="com.oplus.games" />
+        <package android:name="com.android.launcher" />
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:description="@string/xposed_desc"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppDefault"
+        tools:targetApi="31">
+
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:exported="true"
+            android:screenOrientation="behind">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
+            </intent-filter>
+        </activity>
+
+        <activity-alias
+            android:name=".Home"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:screenOrientation="behind"
+            android:targetActivity=".ui.activity.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+    </application>
+</manifest>

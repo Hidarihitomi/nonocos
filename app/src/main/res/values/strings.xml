@@ -1,0 +1,93 @@
+<resources>
+    <string name="app_name">不知道叫什么好</string>
+    <string name="xposed_desc">ColorOS 模块合集：截屏、桌面、主题商店、游戏助手</string>
+
+    <string name="activation_state_active">已激活</string>
+    <string name="activation_state_inactive">未激活</string>
+
+    <string name="home_modules_title">功能</string>
+    <string name="home_modules_desc">每个功能独立配置，点进去修改</string>
+    <string name="module_back">返回</string>
+
+    <string name="home_module_status_on">已开启</string>
+    <string name="home_module_status_off">未开启</string>
+
+    <string name="module_cosa_title">游戏云控伪装</string>
+    <string name="module_screenshot_title">截屏</string>
+    <string name="screenshot_fix_saved_tip">已保存，重新打开「截屏」后生效</string>
+    <string name="screenshot_fix_save_failed_tip">保存失败，请稍后重试</string>
+
+    <string name="spoof_prjname_title">输入机型代码</string>
+    <string name="spoof_prjname_effective">当前生效：%1$s</string>
+    <string name="spoof_prjname_save_and_apply">保存</string>
+    <string name="spoof_prjname_saved_toast">已保存</string>
+    <string name="spoof_prjname_save_failed_tip">保存失败，请稍后重试</string>
+    <string name="spoof_enable_desc">伪装系统机型代码，让云控按指定机型下发配置。</string>
+    <string name="spoof_enable_saved_tip">已保存，重启应用增强服务或设备后生效</string>
+    <string name="spoof_enable_save_failed_tip">保存失败，请稍后重试</string>
+    <string name="service_unavailable_tip">Xposed Service 未连接，暂时无法保存</string>
+    <string name="status_tip">如果云控异常，请尝试清除应用增强服务数据并重启设备</string>
+
+    <string name="screenshot_fix_enable_title">区域截屏增强</string>
+    <string name="screenshot_fix_enable_desc">三指区域截屏松手后直接进入框选。</string>
+    <string name="screenshot_fix_unavailable_tip">Xposed Service 未连接，暂时无法修改</string>
+
+    <string name="module_launcher_title">桌面</string>
+    <string name="launcher_menu_enable_title">二级菜单平铺</string>
+    <string name="launcher_menu_enable_desc">长按图标时，把「更多功能」里的项目直接展开到一级菜单。</string>
+    <string name="launcher_hide_clear_all_title">隐藏清理按键</string>
+    <string name="launcher_hide_clear_all_desc">最近任务底部的「清理」按键不再显示，内存信息保留。</string>
+    <string name="launcher_menu_unavailable_tip">Xposed Service 未连接，暂时无法修改</string>
+    <string name="launcher_menu_saved_tip">已保存，重启桌面后生效</string>
+    <string name="launcher_menu_save_failed_tip">保存失败，请稍后重试</string>
+
+    <string name="module_theme_title">主题商店</string>
+    <string name="theme_vip_enable_title">解锁 VIP</string>
+    <string name="theme_vip_enable_desc">VIP Hook</string>
+    <string name="theme_vip_unavailable_tip">Xposed Service 未连接，暂时无法修改</string>
+    <string name="theme_vip_saved_tip">已保存，重新打开主题商店后生效</string>
+    <string name="theme_vip_save_failed_tip">保存失败，请稍后重试</string>
+
+    <string name="module_game_start_animation_title">游戏助手</string>
+    <string name="game_start_animation_enable_title">屏蔽风驰启动动画</string>
+    <string name="game_start_animation_enable_desc">启动游戏时不再显示「一加风驰游戏内核」启动动画。修改后需重启游戏助手或重新启动游戏。</string>
+    <string name="game_start_animation_unavailable_tip">Xposed Service 未连接，暂时无法修改</string>
+    <string name="game_start_animation_saved_tip">已保存，重启游戏助手后生效</string>
+    <string name="game_start_animation_save_failed_tip">保存失败，请稍后重试</string>
+
+    <string name="module_keyboard_title">小布输入法</string>
+    <string name="keyboard_unavailable_tip">Xposed Service 未连接，暂时无法修改</string>
+    <string name="keyboard_saved_tip">已保存，重新打开输入法后生效</string>
+    <string name="keyboard_save_failed_tip">保存失败，请稍后重试</string>
+
+    <string name="module_permission_title">权限管理</string>
+    <string name="permission_old_dialog_title">旧版应用启动弹窗</string>
+    <string name="permission_old_dialog_desc">使用系统旧版的「允许应用启动」确认弹窗。</string>
+    <string name="permission_always_allow_title">始终允许应用启动</string>
+    <string name="permission_always_allow_desc">把启动弹窗里的「允许 30 天」替换为「始终允许」。</string>
+    <string name="permission_always_allow_old_desc">旧版弹窗本身已包含「始终允许」，此开关暂不生效。</string>
+    <string name="permission_unlock_restricted_title">自动解除受限设置</string>
+    <string name="permission_unlock_restricted_desc">打开应用的权限管理页时，自动清除该应用的「受限设置」限制。</string>
+    <string name="permission_disable_malicious_title">跳过恶意应用拦截</string>
+    <string name="permission_disable_malicious_desc">跳过系统对「恶意应用」的启动拦截，仍保留正常的启动确认与权限检查。修改后需重启系统。</string>
+    <string name="permission_export_pages_title">国际版权限页面</string>
+    <string name="permission_export_pages_desc">权限管理使用国际版的权限分类与应用权限详情页面。修改后需重启设置与权限控制器。</string>
+    <string name="permission_unavailable_tip">Xposed Service 未连接，暂时无法修改</string>
+    <string name="permission_saved_tip">已保存，重启对应应用或系统后生效</string>
+    <string name="permission_save_failed_tip">保存失败，请稍后重试</string>
+
+    <string name="module_multi_app_title">应用分身</string>
+    <string name="multi_app_unlock_title">解除分身应用限制</string>
+    <string name="multi_app_unlock_desc">允许为任意已安装应用创建分身，不再受系统白名单限制。修改后需重启系统。</string>
+    <string name="multi_app_slots_title">分身数量上限</string>
+    <string name="multi_app_slots_desc">把每个应用可分身的数量上限提高到 10 个。</string>
+    <string name="multi_app_unavailable_tip">Xposed Service 未连接，暂时无法修改</string>
+    <string name="multi_app_saved_tip">已保存，重启应用分身或系统后生效</string>
+    <string name="multi_app_save_failed_tip">保存失败，请稍后重试</string>
+
+    <string name="keyboard_material_unlock_title">解锁更多应用的键盘材质</string>
+    <string name="keyboard_material_unlock_desc">允许更多应用使用键盘原生模糊材质。</string>
+    <string name="keyboard_monet_title">键盘莫奈配色</string>
+    <string name="keyboard_monet_desc">采用系统壁纸取色，为键盘、按键和工具栏统一配色。</string>
+    <string name="keyboard_style_tip">美化选项保存后，重新打开输入法即可看到效果。</string>
+</resources>
