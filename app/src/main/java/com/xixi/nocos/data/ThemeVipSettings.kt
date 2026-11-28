@@ -24,17 +24,4 @@ class ThemeVipSettings(private val preferences: SharedPreferences) {
             .putBoolean(ThemeVipConfig.prefsKeyHideAds, value)
             .commit()
     }
-
-    fun isNightResourcesEnabled(): Boolean {
-        return preferences.getBoolean(
-            ThemeVipConfig.prefsKeyNightResources,
-            ThemeVipConfig.defaultNightResources
-        )
-    }
-
-    fun setNightResourcesEnabled(value: Boolean): Boolean {
-        return preferences.edit()
-            .putBoolean(ThemeVipConfig.prefsKeyNightResources, value)
-            .commit()
-    }
 }

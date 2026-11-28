@@ -96,9 +96,6 @@ object ThemeVipConfig {
 
     const val prefsKeyHideAds: String = "hide_ads"
     const val defaultHideAds: Boolean = false
-
-    const val prefsKeyNightResources: String = "night_resources"
-    const val defaultNightResources: Boolean = false
 }
 
 /**

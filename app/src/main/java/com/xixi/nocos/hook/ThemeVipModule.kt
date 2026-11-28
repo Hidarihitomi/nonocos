@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.os.Process
 import android.util.Log
 import com.xixi.nocos.common.ThemeVipConfig
 import com.xixi.nocos.data.ThemeVipSettings
@@ -16,12 +15,11 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * 主题商店：VIP 解锁、去广告、深色模式资源。
+ * 主题商店：VIP 解锁、去广告。
  *
- * 移植自 ONextBox 的 ThemeStoreHooker / ThemeStoreAdsHooker / ThemeNightResourcesHook：
+ * 移植自 ONextBox 的 ThemeStoreHooker / ThemeStoreAdsHooker：
  *   - VIP：固定 4 个 DTO getter 的返回值，并跳过试用过期广播
  *   - 去广告：开屏、首页弹窗、推广弹窗、广告 getter 与广告卡片过滤
- *   - 深色模式：主题资源被系统拒绝时放行已应用主题
  */
 class ThemeVipModule : XposedModule() {
 
@@ -60,20 +58,18 @@ class ThemeVipModule : XposedModule() {
 
         runCatching {
             val settings = readSettings()
-            if (!settings.vip && !settings.ads && !settings.night) {
+            if (!settings.vip && !settings.ads) {
                 log(Log.INFO, TAG, "Theme store hooks disabled, skip ${param.packageName}")
-                return
+                return@runCatching
             }
 
             val loader = param.classLoader
             if (settings.vip) installVipHooks(loader)
             if (settings.ads) installAdsHooks(loader)
-            if (settings.night) installNightHooks(loader)
             log(
                 Log.INFO,
                 TAG,
-                "Theme store hooks installed " +
-                    "(vip=${settings.vip}, ads=${settings.ads}, night=${settings.night})"
+                "Theme store hooks installed (vip=${settings.vip}, ads=${settings.ads})"
             )
         }.onFailure {
             hooksInstalled.set(false)
@@ -81,16 +77,15 @@ class ThemeVipModule : XposedModule() {
         }
     }
 
-    private data class Settings(val vip: Boolean, val ads: Boolean, val night: Boolean)
+    private data class Settings(val vip: Boolean, val ads: Boolean)
 
     private fun readSettings(): Settings = runCatching {
         val settings = ThemeVipSettings(getRemotePreferences(ThemeVipConfig.remotePrefsGroup))
         Settings(
             settings.isEnabled(),
             settings.isHideAdsEnabled(),
-            settings.isNightResourcesEnabled(),
         )
-    }.getOrDefault(Settings(false, false, false))
+    }.getOrDefault(Settings(false, false))
 
     // ---------------------------------------------------------------------
     // VIP
@@ -343,50 +338,6 @@ class ThemeVipModule : XposedModule() {
             }.onFailure {
                 log(Log.WARN, TAG, "Ad card adapter unavailable: $name", it)
             }
-        }
-    }
-
-    // ---------------------------------------------------------------------
-    // 深色模式资源
-    // ---------------------------------------------------------------------
-
-    private fun installNightHooks(loader: ClassLoader) {
-        runCatching {
-            val base = Class.forName("android.content.res.OplusBaseFile", false, loader)
-            val ext = Class.forName("android.content.res.IResourcesImplExt", false, loader)
-            val reject = base.getDeclaredMethod("rejectTheme", ext, String::class.java)
-            val checkUpdate = Class.forName(
-                "android.content.res.OplusThemeResources",
-                false,
-                loader
-            ).getDeclaredMethod("checkUpdate")
-            val defaultTheme = Class.forName(
-                "com.oplus.theme.OplusThirdPartUtil",
-                false,
-                loader
-            ).getDeclaredMethod("getDefaultTheme", Int::class.javaPrimitiveType)
-            if (reject.returnType != Boolean::class.javaPrimitiveType ||
-                defaultTheme.returnType != reject.returnType
-            ) {
-                return@runCatching
-            }
-
-            val userId = Process.myUid() / 100000
-            hook(reject).intercept { chain ->
-                val rejected = chain.proceed()
-                if (rejected == true &&
-                    runCatching { defaultTheme.invoke(null, userId) == false }
-                        .getOrDefault(false)
-                ) {
-                    report("night-resources")
-                    false
-                } else {
-                    rejected
-                }
-            }
-            deoptimizeSafely(checkUpdate)
-        }.onFailure {
-            log(Log.WARN, TAG, "Night theme resource hook unavailable", it)
         }
     }
 

@@ -46,8 +46,6 @@
     <string name="theme_vip_enable_desc">解锁客户端部分会员功能并保留试用资源，实际效果因资源而异。</string>
     <string name="theme_vip_hide_ads_title">去广告</string>
     <string name="theme_vip_hide_ads_desc">屏蔽开屏广告、营销弹窗与已识别的广告卡片。</string>
-    <string name="theme_vip_night_title">深色模式沿用系统主题</string>
-    <string name="theme_vip_night_desc">让作用域内的应用在深色模式下继续使用已套用主题的图标等资源，更改后重新打开对应应用。</string>
     <string name="theme_vip_unavailable_tip">Xposed Service 未连接，暂时无法修改</string>
     <string name="theme_vip_saved_tip">已保存，重新打开主题商店后生效</string>
     <string name="theme_vip_save_failed_tip">保存失败，请稍后重试</string>

@@ -73,10 +73,8 @@ class MainActivity : ComponentActivity() {
     private var isSavingLauncherHideClearAllState by mutableStateOf(false)
     private var themeVipEnabledState by mutableStateOf(ThemeVipConfig.defaultEnabled)
     private var themeVipHideAdsState by mutableStateOf(ThemeVipConfig.defaultHideAds)
-    private var themeVipNightResourcesState by mutableStateOf(ThemeVipConfig.defaultNightResources)
     private var isSavingThemeVipState by mutableStateOf(false)
     private var isSavingThemeVipHideAdsState by mutableStateOf(false)
-    private var isSavingThemeVipNightResourcesState by mutableStateOf(false)
     private var gameStartAnimationEnabledState by mutableStateOf(GameStartAnimationConfig.defaultEnabled)
     private var isSavingGameStartAnimationState by mutableStateOf(false)
     private var keyboardBooleansState by mutableStateOf<Map<String, Boolean>>(emptyMap())
@@ -138,7 +136,7 @@ class MainActivity : ComponentActivity() {
                             null
                         },
                         themeVipEnabled = if (serviceStatusState == ServiceStatus.CONNECTED) {
-                            themeVipEnabledState || themeVipHideAdsState || themeVipNightResourcesState
+                            themeVipEnabledState || themeVipHideAdsState
                         } else {
                             null
                         },
@@ -195,13 +193,10 @@ class MainActivity : ComponentActivity() {
                             serviceStatus = serviceStatusState,
                             enabled = themeVipEnabledState,
                             hideAds = themeVipHideAdsState,
-                            nightResources = themeVipNightResourcesState,
                             isSaving = isSavingThemeVipState,
                             isSavingHideAds = isSavingThemeVipHideAdsState,
-                            isSavingNightResources = isSavingThemeVipNightResourcesState,
                             onToggle = { setThemeVipEnabled(it) },
                             onToggleHideAds = { setThemeVipHideAds(it) },
-                            onToggleNightResources = { setThemeVipNightResources(it) },
                             onBack = { selectedModuleState = null }
                         )
 
@@ -289,7 +284,6 @@ class MainActivity : ComponentActivity() {
             launcherHideClearAllState = LauncherMenuConfig.defaultHideClearAll
             themeVipEnabledState = ThemeVipConfig.defaultEnabled
             themeVipHideAdsState = ThemeVipConfig.defaultHideAds
-            themeVipNightResourcesState = ThemeVipConfig.defaultNightResources
             gameStartAnimationEnabledState = GameStartAnimationConfig.defaultEnabled
             keyboardBooleansState = emptyMap()
             permissionOldStartDialogState = PermissionManagerConfig.defaultOldStartDialog
@@ -346,7 +340,6 @@ class MainActivity : ComponentActivity() {
             launcherHideClearAllState = launcherSettings.isHideClearAllEnabled()
             themeVipEnabledState = themeSettings.isEnabled()
             themeVipHideAdsState = themeSettings.isHideAdsEnabled()
-            themeVipNightResourcesState = themeSettings.isNightResourcesEnabled()
             gameStartAnimationEnabledState = gameStartSettings.isEnabled()
             keyboardBooleansState = KeyboardConfig.booleanKeys.associateWith {
                 keyboardPrefs.getBoolean(it, defaultKeyboardBoolean(it))
@@ -375,7 +368,6 @@ class MainActivity : ComponentActivity() {
             launcherHideClearAllState = LauncherMenuConfig.defaultHideClearAll
             themeVipEnabledState = ThemeVipConfig.defaultEnabled
             themeVipHideAdsState = ThemeVipConfig.defaultHideAds
-            themeVipNightResourcesState = ThemeVipConfig.defaultNightResources
             gameStartAnimationEnabledState = GameStartAnimationConfig.defaultEnabled
             keyboardBooleansState = emptyMap()
             permissionOldStartDialogState = PermissionManagerConfig.defaultOldStartDialog
@@ -521,26 +513,6 @@ class MainActivity : ComponentActivity() {
         isSavingThemeVipHideAdsState = false
         if (success) {
             themeVipHideAdsState = settings.isHideAdsEnabled()
-            Toast.makeText(this, R.string.theme_vip_saved_tip, Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, R.string.theme_vip_save_failed_tip, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun setThemeVipNightResources(enabled: Boolean) {
-        if (isSavingThemeVipNightResourcesState) return
-
-        val settings = themeVipSettings
-        if (settings == null) {
-            Toast.makeText(this, R.string.service_unavailable_tip, Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        isSavingThemeVipNightResourcesState = true
-        val success = settings.setNightResourcesEnabled(enabled)
-        isSavingThemeVipNightResourcesState = false
-        if (success) {
-            themeVipNightResourcesState = settings.isNightResourcesEnabled()
             Toast.makeText(this, R.string.theme_vip_saved_tip, Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, R.string.theme_vip_save_failed_tip, Toast.LENGTH_SHORT).show()

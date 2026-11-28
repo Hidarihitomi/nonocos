@@ -27,13 +27,10 @@ fun ThemeVipScreen(
     serviceStatus: ServiceStatus,
     enabled: Boolean,
     hideAds: Boolean,
-    nightResources: Boolean,
     isSaving: Boolean,
     isSavingHideAds: Boolean,
-    isSavingNightResources: Boolean,
     onToggle: (Boolean) -> Unit,
     onToggleHideAds: (Boolean) -> Unit,
-    onToggleNightResources: (Boolean) -> Unit,
     onBack: () -> Unit
 ) {
     val isServiceConnected = serviceStatus == ServiceStatus.CONNECTED
@@ -89,21 +86,6 @@ fun ThemeVipScreen(
                     checked = hideAds,
                     enabled = isServiceConnected && !isSavingHideAds,
                     onCheckedChange = onToggleHideAds
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        SolidCard(colors) {
-            Column(modifier = Modifier.padding(20.dp)) {
-                SettingSwitchRow(
-                    colors = colors,
-                    title = stringResource(R.string.theme_vip_night_title),
-                    description = stringResource(R.string.theme_vip_night_desc),
-                    checked = nightResources,
-                    enabled = isServiceConnected && !isSavingNightResources,
-                    onCheckedChange = onToggleNightResources
                 )
             }
         }
